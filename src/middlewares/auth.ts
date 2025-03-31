@@ -30,7 +30,7 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
       token,
       process.env.JWT_SECRET as string
     ) as AuthRequest["user"];
-    console.log(decoded, "decoded");
+   
 
     req.user  = decoded;
   } catch (error) {

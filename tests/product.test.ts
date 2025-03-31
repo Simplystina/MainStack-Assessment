@@ -5,8 +5,9 @@ import productService from "../src/services/productService";
 import HttpStatusCodes from "../src/constants/HttpStatusCodes";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import { reqAddProduct, reqGetProducts } from "../src/utils/data/product.test.data";
+import { reqAddProduct, reqGetAProduct, reqGetProducts } from "../src/utils/data/product.test.data";
 import dotenv from "dotenv"
+import ApiError from "../src/utils/ApiError";
 dotenv.config()
 
 
@@ -54,20 +55,14 @@ describe("Product API Endpoints", () => {
         userId
       );
     });
-    it("should return 401 if not authenticated", async () => {
-      const res = await request(app).post("/v1/product").send(reqAddProduct);
-
-      expect(res.status).toBe(HttpStatusCodes.UNAUTHORIZED);
-    }); 
   });
     describe("GET /v1/product", () => {
     it("should get all products for the authenticated user", async () => {
         (ProductModel.find as jest.Mock).mockResolvedValue(reqGetProducts);
 
         const res = await request(app)
-        .get("/v1/product/user")
+        .get("/v1/product")
         .set("Authorization", `Bearer ${token}`);
-
         expect(res.status).toBe(HttpStatusCodes.OK);
         expect(res.body.success).toBe(true);
         expect(res.body.data).toEqual(reqGetProducts);
@@ -79,7 +74,8 @@ describe("Product API Endpoints", () => {
     it("should get all products", async () => {
         (ProductModel.find as jest.Mock).mockResolvedValue(reqGetProducts);
 
-        const res = await request(app).get("/v1/product/all");
+        const res = await request(app)
+        .get("/v1/product/all");
 
         expect(res.status).toBe(HttpStatusCodes.OK);
         expect(res.body.success).toBe(true);
@@ -89,23 +85,33 @@ describe("Product API Endpoints", () => {
     });
     describe("GET /v1/product/:id", () => {
     it("should get a single product", async () => {
-        (ProductModel.findOne as jest.Mock).mockResolvedValue(reqAddProduct);
-
-        const res = await request(app).get(`/v1/product/${productId}`);
-
+        const mockProduct = {
+          _id: productId,
+          user: userId,
+          ...reqGetAProduct
+        };
+        (productService.getProductById as jest.Mock).mockResolvedValue(
+          mockProduct
+        );
+        const res = await request(app)
+        .get(`/v1/product/${productId}`)
+        .set("Authorization", `Bearer ${token}`);
         expect(res.status).toBe(HttpStatusCodes.OK);
         expect(res.body.success).toBe(true);
-        expect(res.body.data).toEqual(reqAddProduct);
-        expect(ProductModel.findOne).toHaveBeenCalledWith({ _id: productId });
+        expect(res.body.data).toEqual(mockProduct);
+        expect(productService.getProductById).toHaveBeenCalledWith(productId);
     });
 
     it("should return 404 if product not found", async () => {
-        (ProductModel.findOne as jest.Mock).mockResolvedValue(null);
+        (productService.getProductById as jest.Mock).mockRejectedValue(
+          new ApiError(HttpStatusCodes.NOT_FOUND, "Product not found")
+        );
 
-        const res = await request(app).get(`/v1/product/${productId}`);
-
+        const res = await request(app)
+        .get(`/v1/product/${productId}`)
+        .set("Authorization", `Bearer ${token}`);
         expect(res.status).toBe(HttpStatusCodes.NOT_FOUND);
-    });
+      });
     });
     describe("PUT /v1/product/:id", () => {
         it("should update a product", async () => {

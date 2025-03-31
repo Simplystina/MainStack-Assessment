@@ -35,6 +35,15 @@ const updateAProduct = async (
 
   return updatedProduct;
 };
+const getProductById = async (id: string) => {
+  const product = await ProductModel.findOne({ _id: id });
+
+  if (!product) {
+    throw new ApiError(HttpStatusCodes.NOT_FOUND, "Product not found");
+  }
+
+  return product;
+};
 
 const deleteAProduct = async (id: string, userId: string) => {
 
@@ -55,4 +64,5 @@ export default {
   createProduct,
   updateAProduct,
   deleteAProduct,
+  getProductById,
 };

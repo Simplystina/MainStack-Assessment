@@ -35,11 +35,12 @@ const getAllProducts = asyncHandler(async(req, res)=>{
 })
 
 const getAProduct = asyncHandler(async (req, res) => {
-  const data = await ProductModel.findOne({_id: req.params.id});
+  const product = await productService.getProductById(req.params.id);
+
   res.status(HttpStatusCodes.OK).json({
     success: true,
-    data: data,
-    message: "Products Retrieved Successfully",
+    data: product,
+    message: "Product retrieved successfully",
   });
 });
 
