@@ -21,7 +21,7 @@ const registerUser = async (
     verificationTokenExpiresAt: Date.now() + 60 * 60 * 1000,
   };
   const user = await UserModel.create(userData);
-  // Send verification email to the user (I could have implemented this is I had set up mailing)
+  // Send verification email to the user (I could have implemented this if I had set up mailing)
   //   
   const userWithoutPassword = user.toObject() as any;
   delete userWithoutPassword.password;

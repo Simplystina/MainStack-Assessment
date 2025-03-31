@@ -6,7 +6,6 @@ import ApiError from "../utils/ApiError";
 
 
 const register = asyncHandler(async (req, res) => {
-  console.log("did we even get there?")
   const { email, password, firstName, lastName, phone } =
     req.body;
   // Check if user already exists

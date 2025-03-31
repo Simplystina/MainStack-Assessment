@@ -10,7 +10,6 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.log(err)
   let error = new ApiError(err.statusCode as HttpStatusCodes, err.message);
 
   if (process.env.MODE !== "production") {

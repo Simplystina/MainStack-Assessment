@@ -34,7 +34,7 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
 
     req.user  = decoded;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     return next(new ApiError(HttpStatusCodes.UNAUTHORIZED, "Invalid Token"))
   }
 
