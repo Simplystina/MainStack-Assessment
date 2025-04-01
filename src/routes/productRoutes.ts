@@ -18,7 +18,7 @@ router.get(
     auth,
     productController.getAllUserProducts
 )
-router.get("/all", productController.getAllProducts);
+router.get("/all", productController.getAllProducts); //isn't protected because it's for getting all products
 router.get(
   "/:id",
   auth,

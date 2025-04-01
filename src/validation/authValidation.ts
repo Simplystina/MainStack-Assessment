@@ -1,7 +1,5 @@
 import Joi from "joi";
 
-//TODO make all email small caps
-
 const register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),

@@ -35,7 +35,6 @@ const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   //Validate if user exist in our database
-  
   const user = await authService.loginUser(email, password);
   res.status(HttpStatusCodes.OK).json({
     success: true,

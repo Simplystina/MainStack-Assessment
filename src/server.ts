@@ -62,15 +62,15 @@ app.all('/', (req, res) => {
 
 
 
-// Simple ping endpoint
+// Simple ping endpoint to wake server up
 app.get('/v1/ping', (req: Request, res: Response) => {
   res.status(200).send('Server is awake!');
 });
-// Add APIs, must be after middleware
+// Add API's after middleware
 app.use('/v1/auth', AuthRouter);
 app.use("/v1/product", ProductRouter);
 
-// catch 404 and forward to error handler
+// catch 404 routes
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -81,10 +81,10 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-// process.on('uncaughtException', (err) => {
-//   console.error(err);
-//   console.log('Node NOT Exiting...'); // Override Grace full exist [EXPERIMENTAL]
-// });
+process.on('uncaughtException', (err) => {
+  console.error(err);
+  console.log('Node NOT Exiting...'); // Override Grace full exist [EXPERIMENTAL]
+});
 
 
 module.exports = app;

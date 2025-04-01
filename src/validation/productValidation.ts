@@ -1,6 +1,5 @@
 import Joi from "joi";
 
-//TODO make all email small caps
 
 const createProduct = {
   body: Joi.object().keys({
