@@ -8,8 +8,8 @@ import cors from "cors"
 import helmet from 'helmet';
 import { NodeEnvs } from './constants/misc';
 import { errorHandler } from './core';
-import AuthRouter from "../src/routes/authRoutes"
-import ProductRouter from "../src/routes/productRoutes"
+import AuthRouter from "./routes/authRoutes"
+import ProductRouter from "./routes/productRoutes"
 import dotenv from "dotenv"
 
 dotenv.config();
